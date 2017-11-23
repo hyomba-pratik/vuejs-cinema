@@ -1,7 +1,13 @@
 <template>
     <div id="movie-list">
 
-        <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie" v-bind:sessions="movie.sessions"></movie-item>
+        <movie-item v-for="movie in filteredMovies" v-bind:movie="movie.movie">
+            <div class="movie-sessions">
+                <div v-for="session in filteredSessions(movie.sessions)" class="session-time-wrapper">
+                    <div class="session-time">{{ formatSessionTime(session.time)}}</div>
+                </div>
+            </div>
+        </movie-item>
 
         <div v-if="!filteredMovies.length" class="no-results">No movies found.</div>
 
@@ -29,6 +35,15 @@
                     }
                 });
                 return matched;
+            },
+            formatSessionTime: function (value) {
+                return this.$moment(value).format("h:mm A");
+            },
+            filteredSessions: function (sessions) {
+                var that = this;
+                return sessions.filter((session)=>{
+                    return this.$moment(session.time).isSame(that.day, 'day');
+                });
             }
         },
         computed: {

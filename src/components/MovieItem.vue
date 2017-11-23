@@ -1,28 +1,21 @@
 <template>
     <div class="movie">
         <div class="movie-col-left">
-            <img v-bind:src="movie.Poster" v-bind:alt="movie.Title">
+            <router-link v-bind:to="{name:'movie', params:{id:movie.imdbID}}"><img v-bind:src="movie.Poster" v-bind:alt="movie.Title"> </router-link>
         </div>
         <div class="movie-col-right">
             <div class="movie-title">
-                <h2>{{movie.Title}}</h2>
+                <router-link v-bind:to="{name:'movie', params:{id:movie.imdbID}}">
+                    <h2>{{movie.Title}}</h2>
+                </router-link>
                 <span class="movie-rating">{{movie.Rated}}</span>
             </div>
-            <div class="movie-sessions">
-                <div v-for="session in sessions" class="session-time-wrapper">
-                    <div class="session-time">{{ formatSessionTime(session.time)}}</div>
-                </div>
-            </div>
+           <slot></slot>
         </div>
     </div>
 </template>
 <script>
     export default{
-        props: ['movie', 'sessions'],
-        methods:{
-            formatSessionTime:function(value){
-                return this.$moment(value).format("h:mm A");
-            }
-        }
+        props: ['movie'],
     }
 </script>

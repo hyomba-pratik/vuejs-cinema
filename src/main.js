@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import './style.scss';
 
-import MovieList from './components/MovieList.vue';
-import MovieFilter from './components/MovieFilter.vue';
-
+import Overview from './components/Overview.vue';
 import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
@@ -15,31 +13,30 @@ Object.defineProperty(Vue.prototype, '$moment', {
     }
 });
 
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
+import routes from './util/routes';
+
+const router = new VueRouter({
+    routes
+});
+
 new Vue({
     el: "#app",
+    router,
     data: {
         genre: [],
         time: [],
-        movies: []
+        movies: [],
+        moment,
+        day: moment()
     },
-    methods: {
-        checkFilter(category, title, checked){
-            if (checked) {
-                this[category].push(title);
-            } else {
-                let index = this[category].indexOf(title);
-                if (index > -1) {
-                    this[category].splice(index, 1);
-                }
-            }
-        }
-    },
+    methods: {},
     components: {
-        MovieList,
-        MovieFilter
+        Overview
     },
     created: function () {
-        console.log(this.$moment);
         this.$http.get("/api").then(resp => {
             this.movies = resp.data;
         });
